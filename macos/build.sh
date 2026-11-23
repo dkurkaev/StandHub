@@ -20,7 +20,7 @@ done
 lipo -create "$TMP/StandHub-arm64" "$TMP/StandHub-x86_64" -output "$APP/Contents/MacOS/StandHub"
 
 sed "s/__VERSION__/$VERSION/g" "$ROOT/macos/Info.plist" > "$APP/Contents/Info.plist"
-cp "$ROOT/standhub.js" "$ROOT/dashboard.html" "$APP/Contents/Resources/"
+cp "$ROOT/standhub.js" "$ROOT/dashboard.html" "$ROOT/LICENSE" "$APP/Contents/Resources/"
 
 echo "→ рисую иконку"
 ICONSET="$TMP/AppIcon.iconset"

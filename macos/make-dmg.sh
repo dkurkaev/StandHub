@@ -1,6 +1,6 @@
 #!/bin/bash
 # Собирает StandHub.app и упаковывает его в build/StandHub-<версия>.dmg
-# (внутри — приложение и ярлык «Applications», чтобы установить перетаскиванием).
+# (внутри — приложение, ярлык «Applications» для установки перетаскиванием и LICENSE.txt).
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
@@ -14,6 +14,7 @@ trap 'rm -rf "$STAGE"' EXIT
 echo "→ упаковываю в DMG"
 ditto "$ROOT/build/StandHub.app" "$STAGE/StandHub.app"
 ln -s /Applications "$STAGE/Applications"
+cp "$ROOT/LICENSE" "$STAGE/LICENSE.txt"
 rm -f "$DMG"
 hdiutil create -volname "StandHub $VERSION" -srcfolder "$STAGE" -fs HFS+ -format UDZO -ov "$DMG" >/dev/null
 

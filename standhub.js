@@ -22,7 +22,7 @@ const os = require('node:os');
 const zlib = require('node:zlib');
 const { execFile, spawn } = require('node:child_process');
 
-const VERSION = '0.2.0';
+const VERSION = '0.2.1';
 const HOME = os.homedir();
 const DATA_DIR = process.env.STANDHUB_HOME || path.join(HOME, '.config', 'standhub');
 const CONFIG_PATH = path.join(DATA_DIR, 'config.json');

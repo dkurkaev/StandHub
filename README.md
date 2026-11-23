@@ -181,7 +181,7 @@ cd StandHub
 Скрипт:
 1. собирает `build/StandHub.app` — универсальный бинарник (arm64 + x86_64), иконка рисуется кодом,
    подпись ad-hoc;
-2. кладёт приложение и ярлык `Applications` во временную папку;
+2. кладёт во временную папку приложение, ярлык `Applications` и `LICENSE.txt`;
 3. упаковывает её в сжатый образ `build/StandHub-<версия>.dmg` (`hdiutil`, ~400 КБ).
 
 Версия берётся из `VERSION` в `standhub.js`. Получившийся DMG можно передать на другой Mac
@@ -199,8 +199,8 @@ export SIGN_IDENTITY="Developer ID Application: Имя Фамилия (TEAMID)"
 # один раз: сохранить учётные данные для нотаризации
 xcrun notarytool store-credentials standhub --apple-id you@example.com --team-id TEAMID
 
-xcrun notarytool submit build/StandHub-0.2.0.dmg --keychain-profile standhub --wait
-xcrun stapler staple build/StandHub-0.2.0.dmg
+xcrun notarytool submit build/StandHub-0.2.1.dmg --keychain-profile standhub --wait
+xcrun stapler staple build/StandHub-0.2.1.dmg
 ```
 
 ## Разработка
