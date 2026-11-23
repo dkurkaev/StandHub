@@ -9,6 +9,9 @@
 
 ![Дашборд StandHub на iPad](docs/dashboard.jpg)
 
+**Скачать:** [последний релиз (DMG для macOS 13+, Apple Silicon и Intel)](https://github.com/dkurkaev/StandHub/releases/latest) ·
+[установка](#установка)
+
 ## Как это устроено
 
 ```
@@ -72,7 +75,8 @@
 
 #### Вариант А — из DMG
 
-1. Возьми `StandHub-<версия>.dmg` (как собрать — в разделе [«Упаковка в DMG»](#упаковка-в-dmg)).
+1. Скачай `StandHub-<версия>.dmg` со страницы [Releases](https://github.com/dkurkaev/StandHub/releases/latest)
+   или собери сам (см. [«Упаковка в DMG»](#упаковка-в-dmg)).
 2. Открой DMG и перетащи **StandHub** в **Applications**.
 3. Запусти StandHub из Launchpad или Finder.
 
