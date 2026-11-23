@@ -1,0 +1,419 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Стенды">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="icon" href="/app-icon.png">
+<link rel="manifest" href="/manifest.webmanifest">
+<title>Стенды</title>
+<style>
+:root {
+  color-scheme: light dark;
+  --bg: #f5f5f7; --card: #ffffff; --text: #1d1d1f; --muted: #6e6e73; --line: rgba(0,0,0,.08);
+  --accent: #4f46e5; --accent-soft: rgba(79,70,229,.10); --ok: #16a34a; --warn: #c2410c; --bad: #dc2626;
+  --chip: rgba(0,0,0,.05); --shadow: 0 1px 2px rgba(0,0,0,.04), 0 6px 20px rgba(0,0,0,.04);
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #111113; --card: #1c1c1f; --text: #f5f5f7; --muted: #9b9ba1; --line: rgba(255,255,255,.08);
+    --accent: #8b83ff; --accent-soft: rgba(139,131,255,.14); --ok: #4ade80; --warn: #fb923c; --bad: #f87171;
+    --chip: rgba(255,255,255,.07); --shadow: none;
+  }
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; background: var(--bg); color: var(--text);
+  font: 15px/1.4 -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;
+  padding: max(20px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) 40px max(16px, env(safe-area-inset-left));
+}
+.wrap { max-width: 1120px; margin: 0 auto; }
+header { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px 20px; flex-wrap: wrap; margin: 6px 0 20px; }
+h1 { font-size: 30px; letter-spacing: -.02em; margin: 0; line-height: 1.1; }
+.sub { color: var(--muted); margin-top: 4px; }
+.pills { display: flex; gap: 8px; flex-wrap: wrap; }
+.pill { display: inline-flex; align-items: center; gap: 7px; padding: 6px 11px; border-radius: 999px; background: var(--card);
+  border: 1px solid var(--line); font-size: 13px; color: var(--muted); max-width: 100%; }
+.pill span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dot { width: 8px; height: 8px; border-radius: 50%; background: var(--muted); flex: none; }
+.dot.ok { background: var(--ok); } .dot.warn { background: var(--warn); } .dot.bad { background: var(--bad); }
+
+.banner { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 14px 16px; margin-bottom: 16px; }
+.banner h2 { font-size: 15px; margin: 0 0 6px; }
+.banner p { margin: 6px 0 0; color: var(--muted); }
+.banner ol { margin: 6px 0 0; padding-left: 20px; color: var(--muted); }
+.banner li { margin: 3px 0; }
+.banner.warn { border-color: color-mix(in srgb, var(--warn) 45%, transparent); }
+.urls { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+code, .url { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 13px; background: var(--chip); padding: 3px 7px; border-radius: 6px; word-break: break-all; }
+.url { color: var(--text); text-decoration: none; }
+
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(330px, 100%), 1fr)); gap: 14px; }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 16px; box-shadow: var(--shadow); display: flex; flex-direction: column; overflow: hidden; min-width: 0; }
+.card a.main { display: flex; gap: 14px; padding: 16px 16px 12px; color: inherit; text-decoration: none; flex: 1; -webkit-tap-highlight-color: transparent; }
+.card a.main:active { background: var(--accent-soft); }
+.ico { flex: none; width: 46px; height: 46px; border-radius: 12px; background: var(--accent-soft); color: var(--accent);
+  display: grid; place-items: center; font-weight: 700; font-size: 20px; overflow: hidden; }
+.ico img { width: 28px; height: 28px; object-fit: contain; }
+.info { min-width: 0; flex: 1; }
+.name { font-weight: 650; font-size: 17px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.title { color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 1px; min-height: 1.4em; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 9px; }
+.chip { font-size: 12px; padding: 2px 8px; border-radius: 6px; background: var(--chip); color: var(--muted); white-space: nowrap; max-width: 100%; overflow: hidden; text-overflow: ellipsis; }
+.chip.fw { background: var(--accent-soft); color: var(--accent); font-weight: 600; }
+.chip.warn { color: var(--warn); } .chip.bad { color: var(--bad); }
+.mono { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-variant-numeric: tabular-nums; }
+.foot { display: flex; align-items: center; gap: 2px; border-top: 1px solid var(--line); padding: 3px 6px 3px 16px; color: var(--muted); font-size: 12px; }
+.foot .path { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-family: ui-monospace, Menlo, monospace; }
+button { font: inherit; }
+button.ghost { appearance: none; border: 0; background: transparent; color: var(--muted); padding: 8px 10px; border-radius: 8px; font-size: 13px; cursor: pointer; min-height: 38px; }
+button.ghost:hover, button.ghost:active { background: var(--chip); color: var(--text); }
+button.small { appearance: none; border: 1px solid var(--line); background: var(--card); color: var(--text); padding: 6px 12px; border-radius: 8px; font-size: 13px; cursor: pointer; }
+
+.empty { text-align: center; padding: 56px 20px; color: var(--muted); background: var(--card); border: 1px dashed var(--line); border-radius: 16px; }
+.empty b { display: block; color: var(--text); font-size: 17px; margin-bottom: 6px; }
+details.hidden { margin-top: 22px; }
+details.hidden summary { cursor: pointer; color: var(--muted); padding: 6px 0; }
+.hrow { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--line); }
+.hrow span { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+footer { margin-top: 28px; color: var(--muted); font-size: 12px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
+.toast { position: fixed; left: 50%; bottom: max(24px, env(safe-area-inset-bottom)); transform: translateX(-50%) translateY(20px); opacity: 0;
+  background: var(--text); color: var(--bg); padding: 10px 16px; border-radius: 10px; font-size: 14px; transition: .2s; pointer-events: none; max-width: calc(100% - 32px); }
+.toast.show { opacity: 1; transform: translateX(-50%); }
+.err { color: var(--bad); }
+
+/* вспомогательные стенды: бэкенды, хранилища, админки */
+details.aux { margin-top: 28px; }
+details.aux > summary { list-style: none; cursor: pointer; display: flex; align-items: baseline; gap: 10px; padding: 4px 0 12px; -webkit-tap-highlight-color: transparent; }
+details.aux > summary::-webkit-details-marker { display: none; }
+details.aux > summary h2 { font-size: 18px; margin: 0; letter-spacing: -.01em; }
+details.aux > summary .count { color: var(--muted); font-weight: 600; }
+details.aux > summary .hint { color: var(--muted); font-size: 13px; flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+details.aux > summary .chev { color: var(--muted); display: inline-block; transition: transform .15s; }
+details.aux[open] > summary .chev { transform: rotate(90deg); }
+.rows { background: var(--card); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; }
+.row { display: flex; align-items: center; gap: 2px; border-top: 1px solid var(--line); padding-right: 6px; }
+.row:first-child { border-top: 0; }
+.row a { display: flex; align-items: center; gap: 12px; flex: 1; min-width: 0; padding: 10px 6px 10px 14px; color: inherit; text-decoration: none; -webkit-tap-highlight-color: transparent; }
+.row a:active { background: var(--accent-soft); }
+.ico.sm { width: 32px; height: 32px; border-radius: 8px; font-size: 15px; }
+.ico.sm img { width: 20px; height: 20px; }
+.rname { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.rsub { color: var(--muted); font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.empty.small { padding: 26px 20px; }
+.row .rinfo { display: flex; align-items: center; gap: 12px; flex: 1; min-width: 0; padding: 10px 6px 10px 14px; }
+.row .small { margin: 0 6px; white-space: nowrap; }
+.ico.dim { background: var(--chip); color: var(--muted); }
+details.aux .note { color: var(--muted); font-size: 13px; margin: -4px 0 10px; }
+
+/* меню действий «⋯» */
+.menu { position: absolute; z-index: 20; min-width: 230px; background: var(--card); border: 1px solid var(--line); border-radius: 12px;
+  box-shadow: 0 12px 32px rgba(0,0,0,.18); padding: 6px; }
+.menu button { display: block; width: 100%; text-align: left; appearance: none; border: 0; background: transparent; color: var(--text);
+  padding: 10px 12px; border-radius: 8px; font: inherit; font-size: 15px; cursor: pointer; }
+.menu button:hover, .menu button:active { background: var(--chip); }
+.menu button.danger { color: var(--bad); }
+.menu hr { border: 0; border-top: 1px solid var(--line); margin: 4px 6px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <h1>Стенды</h1>
+      <div class="sub" id="mac">…</div>
+    </div>
+    <div class="pills" id="pills"></div>
+  </header>
+  <div id="banners"></div>
+  <div class="grid" id="grid"></div>
+  <div id="aux"></div>
+  <div id="skipped"></div>
+  <div id="hidden"></div>
+  <footer>
+    <span id="meta"></span>
+    <span><button class="small" id="awake" hidden></button></span>
+  </footer>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+'use strict';
+const $ = (s) => document.querySelector(s);
+const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const isLocalView = ['localhost', '127.0.0.1', '[::1]'].includes(location.hostname);
+let S = null, lastKey = '', lastRender = 0, failCount = 0;
+
+function standUrl(s) {
+  if (isLocalView) return s.localUrl || `http://localhost:${s.port}/`;
+  const tls = location.protocol === 'https:' && s.exposure === 'mirror';
+  return `${tls ? 'https' : 'http'}://${location.hostname}:${s.port}/`;
+}
+
+function ago(from) {
+  const m = Math.max(0, Math.round((S.now - from) / 60000));
+  if (m < 1) return 'только что';
+  if (m < 60) return `${m} мин`;
+  const h = Math.floor(m / 60);
+  if (h < 24) return `${h} ч${h < 6 && m % 60 ? ` ${m % 60} мин` : ''}`;
+  return `${Math.floor(h / 24)} д`;
+}
+
+const EXPOSURE = {
+  direct: ['', 'напрямую', 'Сервер сам слушает адрес Tailscale — запросы идут мимо StandHub'],
+  offline: ['warn', 'только на Mac', 'Tailscale не подключён'],
+  busy: ['bad', 'порт занят', 'Не удалось занять этот порт на адресе Tailscale'],
+  error: ['bad', 'ошибка прокси', ''],
+  starting: ['', 'подключаю…', ''],
+};
+
+function card(s) {
+  const letter = (s.name.match(/[\p{L}\p{N}]/u) || ['•'])[0].toUpperCase();
+  const chips = [`<span class="chip fw">${esc(s.framework)}</span>`, `<span class="chip mono">:${s.port}</span>`];
+  if (s.branch) chips.push(`<span class="chip" title="ветка">⎇ ${esc(s.branch)}</span>`);
+  if (s.worktree && s.worktree !== s.branch && !String(s.branch || '').endsWith(s.worktree)) chips.push(`<span class="chip" title="git worktree">🌿 ${esc(s.worktree)}</span>`);
+  if (s.health === 'slow') chips.push('<span class="chip warn">не отвечает</span>');
+  if (s.status >= 500) chips.push(`<span class="chip bad">HTTP ${s.status}</span>`);
+  const ex = EXPOSURE[s.exposure];
+  if (ex && !isLocalView) chips.push(`<span class="chip ${ex[0]}" title="${esc(ex[2])}">${ex[1]}</span>`);
+  chips.push(`<span class="chip" title="запущен">${ago(s.startedAt)}</span>`);
+  const sub = s.pkg && s.repo && !s.name.includes(s.pkg.replace(/^@[^/]+\//, '')) ? s.pkg : '';
+  return `<div class="card">
+    <a class="main" href="${esc(standUrl(s))}" target="_blank" rel="noopener">
+      <div class="ico" data-letter="${esc(letter)}"><img src="/icon/${s.port}?pid=${s.pid}" alt=""></div>
+      <div class="info">
+        <div class="name">${esc(s.name)}</div>
+        <div class="title">${esc(s.title || sub || s.args)}</div>
+        <div class="chips">${chips.join('')}</div>
+      </div>
+    </a>
+    <div class="foot">
+      <span class="path" title="${esc(s.args)}">${esc(s.cwd || s.args)}</span>
+      <button class="ghost" data-act="copy" data-port="${s.port}">Ссылка</button>
+      <button class="ghost" data-act="menu" data-port="${s.port}" aria-label="Ещё">•••</button>
+    </div>
+  </div>`;
+}
+
+function row(s) {
+  const letter = (s.name.match(/[\p{L}\p{N}]/u) || ['•'])[0].toUpperCase();
+  const sub = [s.framework, `:${s.port}`, s.title, s.health === 'slow' ? 'не отвечает' : ''].filter(Boolean).join(' · ');
+  return `<div class="row">
+    <a href="${esc(standUrl(s))}" target="_blank" rel="noopener">
+      <div class="ico sm" data-letter="${esc(letter)}"><img src="/icon/${s.port}?pid=${s.pid}" alt=""></div>
+      <div class="info"><div class="rname">${esc(s.name)}</div><div class="rsub">${esc(sub)}</div></div>
+    </a>
+    <button class="ghost" data-act="menu" data-port="${s.port}" aria-label="Ещё">•••</button>
+  </div>`;
+}
+
+function skippedRow(s) {
+  const letter = (s.name.match(/[\p{L}\p{N}]/u) || ['•'])[0].toUpperCase();
+  const sub = [s.framework, `:${s.port}`, s.type, `HTTP ${s.status}`].filter(Boolean).join(' · ');
+  return `<div class="row">
+    <div class="rinfo" title="${esc(s.args)}">
+      <div class="ico sm dim">${esc(letter)}</div>
+      <div class="info"><div class="rname">${esc(s.name)}</div><div class="rsub">${esc(sub)}</div></div>
+    </div>
+    <button class="small" data-act="include" data-port="${s.port}">Показать</button>
+  </div>`;
+}
+
+const store = {
+  get(k) { try { return localStorage.getItem(k); } catch { return null; } },
+  set(k, v) { try { localStorage.setItem(k, v); } catch { /* приватный режим */ } },
+};
+
+let menuEl = null;
+function closeMenu() { if (menuEl) { menuEl.remove(); menuEl = null; } }
+function openMenu(btn, s) {
+  closeMenu();
+  menuEl = document.createElement('div');
+  menuEl.className = 'menu';
+  const move = s.kind === 'app' ? ['to-service', 'Во вспомогательные'] : ['to-app', 'В основные стенды'];
+  const items = [['copy', 'Скопировать ссылку'], ['rename', 'Переименовать…'], move];
+  if (s.included) items.push(['exclude', 'Не показывать всегда (вернуть в пропущенные)']);
+  menuEl.innerHTML = items
+    .map(([a, t]) => `<button data-act="${a}" data-port="${s.port}">${t}</button>`).join('')
+    + `<hr><button class="danger" data-act="hide" data-port="${s.port}">Скрыть и закрыть доступ</button>`;
+  document.body.appendChild(menuEl);
+  const r = btn.getBoundingClientRect();
+  const left = Math.min(r.right + scrollX - menuEl.offsetWidth, scrollX + document.documentElement.clientWidth - menuEl.offsetWidth - 8);
+  menuEl.style.left = `${Math.max(scrollX + 8, left)}px`;
+  const below = r.bottom + 6 + menuEl.offsetHeight < innerHeight;
+  menuEl.style.top = `${(below ? r.bottom + 6 : r.top - 6 - menuEl.offsetHeight) + scrollY}px`;
+}
+
+function banners() {
+  const t = S.tailscale, out = [];
+  if (!t.installed) {
+    out.push(`<div class="banner warn"><h2>Tailscale не установлен</h2><ol>
+      <li>Установи Tailscale на Mac (tailscale.com/download) и войди через <b>Sign in with Apple</b>.</li>
+      <li>Установи Tailscale на iPad из App Store и войди тем же Apple ID.</li>
+      <li>Открой на iPad адрес, который появится здесь.</li></ol></div>`);
+  } else if (t.state !== 'Running' || !S.bind) {
+    out.push(`<div class="banner warn"><h2>Tailscale: ${esc(t.state)}</h2><p>Включи Tailscale на Mac и войди в аккаунт (значок в строке меню). Пока стенды доступны только на этом Mac.</p></div>`);
+  } else if (isLocalView) {
+    const urls = S.dashboard.urls.map((u) => `<a class="url" href="${esc(u)}" target="_blank">${esc(u)}</a>`).join('');
+    out.push(`<div class="banner"><h2>Открыть на iPad</h2><div class="urls">${urls}</div>
+      <p>На iPad должен быть включён Tailscale с тем же аккаунтом. В Safari: «Поделиться» → «На экран „Домой“», чтобы стенды открывались как приложение.</p>
+      ${!t.https && t.httpsError ? `<p>HTTPS: ${esc(t.httpsError)}. Включи MagicDNS и HTTPS Certificates на login.tailscale.com/admin/dns — нужно для камеры, Service Worker и т.п.</p>` : ''}</div>`);
+  }
+  return out.join('');
+}
+
+function render() {
+  const t = S.tailscale;
+  document.title = `Стенды · ${S.mac.name}`;
+  $('#mac').textContent = S.mac.name;
+  const pills = [];
+  if (!t.installed) pills.push('<span class="pill"><i class="dot bad"></i><span>Tailscale не установлен</span></span>');
+  else if (t.state !== 'Running' || !S.bind) pills.push(`<span class="pill"><i class="dot warn"></i><span>Tailscale: ${esc(t.state)}</span></span>`);
+  else pills.push(`<span class="pill" title="${esc(t.ip || '')}"><i class="dot ok"></i><span>${esc((t.dnsName || t.ip || '').split('.')[0] || 'Tailscale')}${t.https ? ' · HTTPS' : ''}</span></span>`);
+  pills.push(`<span class="pill" title="${esc(S.viewer.who)}"><span>Вы: ${esc(S.viewer.who)}</span></span>`);
+  $('#pills').innerHTML = pills.join('');
+  $('#banners').innerHTML = banners();
+
+  const visible = S.stands.filter((s) => !s.hidden);
+  const hidden = S.stands.filter((s) => s.hidden);
+  const apps = visible.filter((s) => s.kind !== 'service');
+  const services = visible.filter((s) => s.kind === 'service');
+  $('#grid').style.display = apps.length ? '' : 'block';
+  $('#grid').innerHTML = apps.length ? apps.map(card).join('')
+    : services.length
+      ? '<div class="empty small"><b>Фронтендов сейчас нет</b>Запущены только вспомогательные сервисы — они ниже.</div>'
+      : '<div class="empty"><b>Нет запущенных стендов</b>Запусти dev-сервер на Mac — он появится здесь сам, через пару секунд.</div>';
+  const auxOpen = store.get('auxOpen') === '1' || (!apps.length && services.length > 0);
+  $('#aux').innerHTML = services.length ? `<details class="aux" data-store="auxOpen"${auxOpen ? ' open' : ''}>
+      <summary><span class="chev">›</span><h2>Вспомогательные <span class="count">${services.length}</span></h2>
+        <span class="hint">бэкенды, хранилища, админки</span></summary>
+      <div class="rows">${services.map(row).join('')}</div>
+    </details>` : '';
+  const skipped = S.skipped || [];
+  $('#skipped').innerHTML = skipped.length ? `<details class="aux" data-store="skippedOpen"${store.get('skippedOpen') === '1' ? ' open' : ''}>
+      <summary><span class="chev">›</span><h2>Пропущенные <span class="count">${skipped.length}</span></h2>
+        <span class="hint">отвечают по HTTP, но не похожи на стенд</span></summary>
+      <p class="note">API, метрики и служебные порты на случайных портах и в Docker. «Показать» откроет к порту доступ с iPad и добавит его в список.</p>
+      <div class="rows">${skipped.map(skippedRow).join('')}</div>
+    </details>` : '';
+  $('#hidden').innerHTML = hidden.length ? `<details class="hidden"><summary>Скрытые (${hidden.length})</summary>
+    ${hidden.map((s) => `<div class="hrow"><span><b>${esc(s.name)}</b> <span class="mono">:${s.port}</span> · ${esc(s.framework)}</span>
+      <button class="small" data-act="unhide" data-port="${s.port}">Показать</button></div>`).join('')}</details>` : '';
+
+  const when = new Date(S.scannedAt).toLocaleTimeString('ru-RU');
+  $('#meta').textContent = `StandHub ${S.version} · обновлено ${when} · доступ: ${S.auth === 'same-user' ? 'только ваш аккаунт Tailscale' : S.auth}`;
+  const aw = $('#awake');
+  aw.hidden = false;
+  aw.textContent = S.keepAwake ? '☕ Mac не засыпает, пока есть стенды — выключить' : '☾ Не давать Mac засыпать';
+  lastRender = Date.now();
+}
+
+async function load() {
+  try {
+    const r = await fetch('/api/state', { cache: 'no-store' });
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    S = await r.json();
+    failCount = 0;
+    const key = JSON.stringify([S.stands.map((s) => [s.port, s.pid, s.name, s.title, s.health, s.exposure, s.branch, s.hidden, s.status, s.kind, s.included]),
+      (S.skipped || []).map((s) => [s.port, s.name, s.status, s.type]), S.tailscale, S.viewer, S.bind, S.keepAwake]);
+    if (key !== lastKey || Date.now() - lastRender > 30000) { lastKey = key; render(); }
+    else $('#meta').textContent = $('#meta').textContent.replace(/обновлено [^·]+/, `обновлено ${new Date(S.scannedAt).toLocaleTimeString('ru-RU')} `);
+  } catch (e) {
+    if (++failCount >= 2) $('#meta').innerHTML = `<span class="err">Нет связи с Mac (${esc(e.message)}). Mac спит или Tailscale выключен?</span>`;
+  }
+}
+
+async function post(path, body) {
+  const r = await fetch(path, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) });
+  if (!r.ok) throw new Error(`HTTP ${r.status}`);
+  S = await r.json();
+  lastKey = '';
+  render();
+}
+
+function toast(text) {
+  const el = $('#toast');
+  el.textContent = text;
+  el.classList.add('show');
+  clearTimeout(toast.t);
+  toast.t = setTimeout(() => el.classList.remove('show'), 1800);
+}
+
+async function copy(text) {
+  try { await navigator.clipboard.writeText(text); return true; } catch { /* insecure context */ }
+  const ta = Object.assign(document.createElement('textarea'), { value: text });
+  ta.setAttribute('readonly', '');
+  ta.style.cssText = 'position:fixed;opacity:0';
+  document.body.appendChild(ta);
+  ta.select();
+  ta.setSelectionRange(0, text.length);
+  let ok = false;
+  try { ok = document.execCommand('copy'); } catch { /* ignore */ }
+  ta.remove();
+  return ok;
+}
+
+document.addEventListener('click', async (e) => {
+  const b = e.target.closest('button[data-act]');
+  if (!b) { if (menuEl && !e.target.closest('.menu')) closeMenu(); return; }
+  const port = +b.dataset.port;
+  const s = S.stands.find((x) => x.port === port);
+  if (b.dataset.act === 'menu') {
+    if (menuEl && menuEl.dataset.port === String(port)) { closeMenu(); return; }
+    if (s) { openMenu(b, s); menuEl.dataset.port = String(port); }
+    return;
+  }
+  closeMenu();
+  try {
+    if (b.dataset.act === 'include') {
+      const sk = (S.skipped || []).find((x) => x.port === port);
+      b.disabled = true;
+      await post('/api/include', { port, include: true });
+      toast(`${sk ? sk.name : `:${port}`} — теперь в списке стендов`);
+    } else if (b.dataset.act === 'exclude' && s) {
+      await post('/api/include', { port, include: false });
+      toast(`${s.name} — снова в пропущенных`);
+    } else if ((b.dataset.act === 'to-app' || b.dataset.act === 'to-service') && s) {
+      const kind = b.dataset.act === 'to-app' ? 'app' : 'service';
+      await post('/api/kind', { port, kind });
+      toast(kind === 'app' ? `${s.name} — в основных` : `${s.name} — во вспомогательных`);
+    } else if (b.dataset.act === 'copy' && s) {
+      const url = standUrl(s);
+      if (await copy(url)) toast('Ссылка скопирована'); else prompt('Ссылка на стенд', url);
+    } else if (b.dataset.act === 'rename' && s) {
+      const name = prompt(`Название для :${port} (пусто — автоматическое «${s.autoName}»)`, s.name === s.autoName ? '' : s.name);
+      if (name !== null) await post('/api/rename', { port, name });
+    } else if (b.dataset.act === 'hide') {
+      await post('/api/hide', { port, hidden: true });
+      toast(`:${port} скрыт и не доступен извне`);
+    } else if (b.dataset.act === 'unhide') {
+      await post('/api/hide', { port, hidden: false });
+    }
+  } catch (err) { toast(`Ошибка: ${err.message}`); }
+});
+
+$('#awake').addEventListener('click', async () => {
+  try { await post('/api/keep-awake', { on: !S.keepAwake }); } catch (err) { toast(`Ошибка: ${err.message}`); }
+});
+
+document.addEventListener('toggle', (e) => {
+  if (e.target.matches && e.target.matches('details[data-store]')) store.set(e.target.dataset.store, e.target.open ? '1' : '0');
+}, true);
+window.addEventListener('resize', closeMenu);
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeMenu(); });
+
+document.addEventListener('error', (e) => {
+  const img = e.target;
+  if (img.tagName === 'IMG' && img.parentNode && img.parentNode.dataset.letter) img.parentNode.textContent = img.parentNode.dataset.letter;
+}, true);
+
+let poll = null;
+function start() { clearInterval(poll); load(); poll = setInterval(load, 3000); }
+document.addEventListener('visibilitychange', () => { if (document.hidden) clearInterval(poll); else start(); });
+start();
+</script>
+</body>
+</html>
